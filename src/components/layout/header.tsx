@@ -1,16 +1,25 @@
-'use client'
+"use client";
 
-import { Plus, RotateCcw, Search, Terminal, Package, Layers, FolderOpen, type LucideIcon } from 'lucide-react'
-import { useLibraryStore } from '@/store/library-store'
-import { CATEGORY_META } from '@/core/constants/categories'
-import type { CategoryId } from '@/core/domain/snippet'
+import {
+  Plus,
+  RotateCcw,
+  Search,
+  Terminal,
+  Package,
+  Layers,
+  FolderOpen,
+  type LucideIcon,
+} from "lucide-react";
+import { useLibraryStore } from "@/store/library-store";
+import { CATEGORY_META } from "@/core/constants/categories";
+import type { CategoryId } from "@/core/domain/snippet";
 
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
-  'create-project': Terminal,
-  'npm-install': Package,
-  'sweetalert': Layers,
-  'folder-structure': FolderOpen,
-}
+  "create-project": Terminal,
+  "npm-install": Package,
+  sweetalert: Layers,
+  "folder-structure": FolderOpen,
+};
 
 export function Header() {
   const {
@@ -19,28 +28,29 @@ export function Header() {
     setSearchQuery,
     openAddGroupModal,
     resetToDefaults,
-  } = useLibraryStore()
+  } = useLibraryStore();
 
-  const meta = CATEGORY_META[activeCategory]
-  const Icon = CATEGORY_ICONS[activeCategory]
+  const meta = CATEGORY_META[activeCategory];
+  const Icon = CATEGORY_ICONS[activeCategory];
 
   const handleReset = () => {
     if (
       window.confirm(
-        'รีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้น?\n\nSnippet และ Group ที่เพิ่มเองจะหายทั้งหมด'
+        "รีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้น?\n\nSnippet และ Group ที่เพิ่มเองจะหายทั้งหมด",
       )
     ) {
-      resetToDefaults()
+      resetToDefaults();
     }
-  }
+  };
 
   return (
     <header className="flex items-center gap-4 border-b border-[#1e1e1e] bg-[#080808] px-6 py-4">
       <div className="flex shrink-0 items-center gap-2.5">
         <Icon size={16} strokeWidth={1.5} className="text-[#777]" />
         <div>
-          <h2 className="text-sm font-semibold leading-none text-white">{meta.label}</h2>
-          <p className="mt-0.5 text-xs text-[#777]">{meta.description}</p>
+          <h2 className="text-sm font-semibold leading-none text-white">
+            {meta.label}
+          </h2>
         </div>
       </div>
 
@@ -61,7 +71,7 @@ export function Header() {
         />
         {searchQuery && (
           <button
-            onClick={() => setSearchQuery('')}
+            onClick={() => setSearchQuery("")}
             className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-xs text-[#666] transition-colors hover:text-[#bbb]"
           >
             ✕
@@ -88,5 +98,5 @@ export function Header() {
         </button>
       </div>
     </header>
-  )
+  );
 }

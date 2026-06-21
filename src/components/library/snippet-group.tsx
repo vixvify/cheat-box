@@ -1,29 +1,33 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { ChevronRight, Pencil, Plus, Trash2 } from 'lucide-react'
-import { SnippetCard } from './snippet-card'
-import { useLibraryStore } from '@/store/library-store'
-import type { CategoryId, SnippetGroup as SnippetGroupType } from '@/core/domain/snippet'
+import { useState } from "react";
+import { ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { SnippetCard } from "./snippet-card";
+import { useLibraryStore } from "@/store/library-store";
+import type {
+  CategoryId,
+  SnippetGroup as SnippetGroupType,
+} from "@/core/domain/snippet";
 
 interface SnippetGroupProps {
-  group: SnippetGroupType
-  categoryId: CategoryId
+  group: SnippetGroupType;
+  categoryId: CategoryId;
 }
 
 export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  const { openAddSnippetModal, openEditGroupModal, deleteGroup } = useLibraryStore()
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const { openAddSnippetModal, openEditGroupModal, deleteGroup } =
+    useLibraryStore();
 
   const handleDeleteGroup = () => {
     if (confirmDelete) {
-      deleteGroup(categoryId, group.id)
+      deleteGroup(categoryId, group.id);
     } else {
-      setConfirmDelete(true)
-      setTimeout(() => setConfirmDelete(false), 3000)
+      setConfirmDelete(true);
+      setTimeout(() => setConfirmDelete(false), 3000);
     }
-  }
+  };
 
   return (
     <section className="mb-10">
@@ -36,7 +40,7 @@ export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
             size={14}
             strokeWidth={2}
             className={`shrink-0 text-[#666] transition-transform duration-150 ${
-              isExpanded ? 'rotate-90' : ''
+              isExpanded ? "rotate-90" : ""
             }`}
           />
           <h2 className="text-xs font-bold uppercase tracking-widest text-[#bbb]">
@@ -72,10 +76,10 @@ export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
             onClick={handleDeleteGroup}
             className={`cursor-pointer rounded p-1.5 transition-colors ${
               confirmDelete
-                ? 'bg-red-950/40 text-red-400'
-                : 'text-[#555] hover:bg-red-950/30 hover:text-red-400'
+                ? "bg-red-950/40 text-red-400"
+                : "text-[#555] hover:bg-red-950/30 hover:text-red-400"
             }`}
-            title={confirmDelete ? 'Click again to confirm' : 'Delete group'}
+            title={confirmDelete ? "Click again to confirm" : "Delete group"}
           >
             <Trash2 size={12} strokeWidth={1.5} />
           </button>
@@ -107,5 +111,5 @@ export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
         </div>
       )}
     </section>
-  )
+  );
 }
