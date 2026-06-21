@@ -33,6 +33,7 @@ export type CategoryId =
   | 'npm-install'
   | 'sweetalert'
   | 'folder-structure'
+  | 'mui-components'
 
 export interface Category {
   id: CategoryId

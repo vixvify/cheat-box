@@ -8,6 +8,7 @@ import {
   Package,
   Layers,
   FolderOpen,
+  Palette,
   type LucideIcon,
 } from "lucide-react";
 
@@ -16,6 +17,7 @@ const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   "npm-install": Package,
   sweetalert: Layers,
   "folder-structure": FolderOpen,
+  "mui-components": Palette,
 };
 
 export function Sidebar() {

@@ -5,6 +5,7 @@ export const CATEGORY_ORDER: CategoryId[] = [
   'npm-install',
   'sweetalert',
   'folder-structure',
+  'mui-components',
 ]
 
 export const CATEGORY_META: Record<
@@ -30,6 +31,11 @@ export const CATEGORY_META: Record<
     label: 'Folder Structure',
     icon: '📁',
     description: 'โครงสร้าง folder เบื้องต้นสำหรับ Next.js, Go, และ Elysia',
+  },
+  'mui-components': {
+    label: 'MUI Components',
+    icon: '🎨',
+    description: 'แหล่งรวม Material UI (MUI) components ที่ใช้บ่อย พร้อมตัวอย่าง preview และโค้ดสำหรับก๊อปปี้',
   },
 }
 

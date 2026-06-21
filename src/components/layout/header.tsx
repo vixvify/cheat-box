@@ -8,6 +8,7 @@ import {
   Package,
   Layers,
   FolderOpen,
+  Palette,
   type LucideIcon,
 } from "lucide-react";
 import { useLibraryStore } from "@/store/library-store";
@@ -19,6 +20,7 @@ const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   "npm-install": Package,
   sweetalert: Layers,
   "folder-structure": FolderOpen,
+  "mui-components": Palette,
 };
 
 export function Header() {
@@ -79,24 +81,26 @@ export function Header() {
         )}
       </div>
 
-      <div className="ml-auto flex items-center gap-2">
-        <button
-          id="add-group-btn"
-          onClick={() => openAddGroupModal(activeCategory)}
-          className="flex cursor-pointer items-center gap-1.5 rounded border border-[#2a2a2a] bg-[#141414] px-3.5 py-2 text-sm font-medium text-[#ccc] transition-colors hover:border-[#3a3a3a] hover:bg-[#1c1c1c] hover:text-white"
-        >
-          <Plus size={13} strokeWidth={2.5} />
-          Add Group
-        </button>
-        <button
-          id="reset-btn"
-          onClick={handleReset}
-          className="cursor-pointer rounded p-2 text-[#555] transition-colors hover:bg-[#111] hover:text-[#999]"
-          title="Reset to defaults"
-        >
-          <RotateCcw size={14} strokeWidth={1.5} />
-        </button>
-      </div>
+      {activeCategory !== "mui-components" && (
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            id="add-group-btn"
+            onClick={() => openAddGroupModal(activeCategory)}
+            className="flex cursor-pointer items-center gap-1.5 rounded border border-[#2a2a2a] bg-[#141414] px-3.5 py-2 text-sm font-medium text-[#ccc] transition-colors hover:border-[#3a3a3a] hover:bg-[#1c1c1c] hover:text-white"
+          >
+            <Plus size={13} strokeWidth={2.5} />
+            Add Group
+          </button>
+          <button
+            id="reset-btn"
+            onClick={handleReset}
+            className="cursor-pointer rounded p-2 text-[#555] transition-colors hover:bg-[#111] hover:text-[#999]"
+            title="Reset to defaults"
+          >
+            <RotateCcw size={14} strokeWidth={1.5} />
+          </button>
+        </div>
+      )}
     </header>
   );
 }
