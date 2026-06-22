@@ -28,6 +28,7 @@ const DEFAULT_MODAL: ModalState = {
 interface LibraryStore {
   categories: Category[];
   projects: Project[];
+  isLoadingProjects: boolean;
 
   activeCategory: CategoryId;
   searchQuery: string;
@@ -82,6 +83,7 @@ interface LibraryStore {
     techStack: string,
     description: string,
     status: Project["status"],
+    repoUrl?: string | null,
   ) => Promise<void>;
   updateProject: (
     id: string,
@@ -89,6 +91,7 @@ interface LibraryStore {
     techStack: string,
     description: string,
     status: Project["status"],
+    repoUrl?: string | null,
   ) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
 
@@ -100,6 +103,7 @@ export const useLibraryStore = create<LibraryStore>()(
     (set, get) => ({
       categories: getDefaultCategories(),
       projects: [],
+      isLoadingProjects: false,
       activeCategory: "current-projects",
       searchQuery: "",
       modal: DEFAULT_MODAL,
@@ -277,6 +281,7 @@ export const useLibraryStore = create<LibraryStore>()(
         })),
 
       fetchProjects: async () => {
+        set({ isLoadingProjects: true });
         try {
           const res = await fetch("/api/projects");
           if (res.ok) {
@@ -285,17 +290,19 @@ export const useLibraryStore = create<LibraryStore>()(
           }
         } catch (err) {
           console.error("Error fetching projects from API:", err);
+        } finally {
+          set({ isLoadingProjects: false });
         }
       },
 
-      addProject: async (name, techStack, description, status) => {
+      addProject: async (name, techStack, description, status, repoUrl) => {
         try {
           const res = await fetch("/api/projects", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, techStack, description, status }),
+            body: JSON.stringify({ name, techStack, description, status, repoUrl }),
           });
           if (res.ok) {
             const newProject = await res.json();
@@ -308,14 +315,14 @@ export const useLibraryStore = create<LibraryStore>()(
         }
       },
 
-      updateProject: async (id, name, techStack, description, status) => {
+      updateProject: async (id, name, techStack, description, status, repoUrl) => {
         try {
           const res = await fetch(`/api/projects/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, techStack, description, status }),
+            body: JSON.stringify({ name, techStack, description, status, repoUrl }),
           });
           if (res.ok) {
             const updatedProject = await res.json();

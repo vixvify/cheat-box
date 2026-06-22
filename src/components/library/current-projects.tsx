@@ -14,8 +14,14 @@ import { useLibraryStore } from "@/store/library-store";
 import type { Project } from "@/core/domain/snippet";
 
 export function CurrentProjects() {
-  const { projects, searchQuery, addProject, updateProject, deleteProject } =
-    useLibraryStore();
+  const {
+    projects,
+    isLoadingProjects,
+    searchQuery,
+    addProject,
+    updateProject,
+    deleteProject,
+  } = useLibraryStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -26,6 +32,7 @@ export function CurrentProjects() {
   const [status, setStatus] = useState<Project["status"]>("In Progress");
 
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [repoUrl, setRepoUrl] = useState("");
 
   useEffect(() => {
     if (editingProject) {
@@ -33,11 +40,13 @@ export function CurrentProjects() {
       setTechStack(editingProject.techStack);
       setDescription(editingProject.description);
       setStatus(editingProject.status);
+      setRepoUrl(editingProject.repoUrl || "");
     } else {
       setName("");
       setTechStack("");
       setDescription("");
       setStatus("In Progress");
+      setRepoUrl("");
     }
   }, [editingProject, isModalOpen]);
 
@@ -69,9 +78,16 @@ export function CurrentProjects() {
         techStack.trim(),
         description.trim(),
         status,
+        repoUrl.trim() || null,
       );
     } else {
-      addProject(name.trim(), techStack.trim(), description.trim(), status);
+      addProject(
+        name.trim(),
+        techStack.trim(),
+        description.trim(),
+        status,
+        repoUrl.trim() || null,
+      );
     }
     handleCloseModal();
   };
@@ -135,6 +151,56 @@ export function CurrentProjects() {
     "w-full rounded border border-[#1c1c1c] bg-[#080808] px-3 py-2.5 text-sm text-white placeholder:text-[#444] transition-colors focus:border-[#333] focus:outline-none";
 
   const labelClass = "mb-1.5 block text-xs font-medium text-[#888]";
+
+  if (isLoadingProjects) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between border-b border-[#1e1e1e] pb-4">
+          <div>
+            <h2 className="text-[13px] font-bold uppercase tracking-widest text-[#bbb]">
+              งานที่กำลังทำอยู่ตอนนี้
+            </h2>
+            <p className="mt-1 text-xs text-[#555]">
+              กำลังโหลดข้อมูลโครงการของคุณ...
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((n) => (
+            <div
+              key={n}
+              className="flex flex-col justify-between rounded border border-[#1e1e1e] bg-[#090909] p-5 space-y-4 animate-pulse"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="h-4.5 w-16 rounded-full bg-[#1b1b1b] border border-[#222]" />
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-5 w-5 rounded bg-[#1b1b1b] border border-[#222]" />
+                    <div className="h-5 w-5 rounded bg-[#1b1b1b] border border-[#222]" />
+                  </div>
+                </div>
+                <div className="h-5 w-3/4 rounded bg-[#1b1b1b]" />
+              </div>
+
+              <div className="my-3 flex-1 space-y-2">
+                <div className="h-3 w-full rounded bg-[#1b1b1b]" />
+                <div className="h-3 w-5/6 rounded bg-[#1b1b1b]" />
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-[#161616] space-y-3">
+                <div className="flex gap-1">
+                  <div className="h-4.5 w-14 rounded bg-[#1b1b1b] border border-[#222]" />
+                  <div className="h-4.5 w-16 rounded bg-[#1b1b1b] border border-[#222]" />
+                </div>
+                <div className="h-3 w-1/2 rounded bg-[#1b1b1b]" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -244,15 +310,33 @@ export function CurrentProjects() {
                 <div className="mt-4 pt-3 border-t border-[#161616] space-y-2.5">
                   {techTags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
-                      {techTags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="flex items-center gap-1 rounded bg-[#131313] border border-[#202020] px-2 py-0.5 text-[10px] font-medium text-[#777] font-mono"
-                        >
-                          <Code size={9} />
-                          {tag}
-                        </span>
-                      ))}
+                      {techTags.map((tag) => {
+                        const rUrl = project.repoUrl;
+                        if (rUrl) {
+                          return (
+                            <a
+                              key={tag}
+                              href={rUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={`Open Repository: ${rUrl}`}
+                              className="flex items-center gap-1 rounded bg-[#131313] border border-[#202020] px-2.5 py-1 text-xs font-medium text-[#777] font-mono transition-all hover:border-blue-500/30 hover:bg-blue-950/25 hover:text-blue-400 cursor-pointer"
+                            >
+                              <Code size={11} />
+                              {tag}
+                            </a>
+                          );
+                        }
+                        return (
+                          <span
+                            key={tag}
+                            className="flex items-center gap-1 rounded bg-[#131313] border border-[#202020] px-2.5 py-1 text-xs font-medium text-[#777] font-mono"
+                          >
+                            <Code size={11} />
+                            {tag}
+                          </span>
+                        );
+                      })}
                     </div>
                   )}
 
@@ -333,6 +417,17 @@ export function CurrentProjects() {
               </div>
 
               <div>
+                <label className={labelClass}>ลิงก์ Repository (GitHub / Git)</label>
+                <input
+                  type="url"
+                  value={repoUrl}
+                  onChange={(e) => setRepoUrl(e.target.value)}
+                  placeholder="เช่น https://github.com/vixvify/glory-portal"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
                 <label className={labelClass}>สถานะโครงการ</label>
                 <select
                   value={status}
@@ -381,3 +476,4 @@ export function CurrentProjects() {
     </div>
   );
 }
+

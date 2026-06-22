@@ -13,6 +13,7 @@ model Project {
   description String
   status      String
   updatedAt   BigInt @map("updated_at")
+  repoUrl     String? @map("repo_url")
 
   @@map("projects")
 }

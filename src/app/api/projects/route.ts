@@ -17,6 +17,7 @@ export async function GET() {
       description: r.description,
       status: r.status,
       updatedAt: Number(r.updatedAt),
+      repoUrl: r.repoUrl,
     }));
 
     return NextResponse.json(projects);
@@ -28,7 +29,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name, techStack, description, status } = await request.json();
+    const { name, techStack, description, status, repoUrl } =
+      await request.json();
 
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -41,6 +43,7 @@ export async function POST(request: Request) {
         description: description || "",
         status: status || "In Progress",
         updatedAt: BigInt(Date.now()),
+        repoUrl: repoUrl || null,
       },
     });
 
@@ -51,6 +54,7 @@ export async function POST(request: Request) {
       description: newProject.description,
       status: newProject.status,
       updatedAt: Number(newProject.updatedAt),
+      repoUrl: newProject.repoUrl,
     });
   } catch (err: any) {
     console.error("POST /api/projects error:", err);

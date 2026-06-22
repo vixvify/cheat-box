@@ -35,6 +35,7 @@ export interface Project {
   description: string
   status: 'In Progress' | 'Completed' | 'Planning' | 'On Hold'
   updatedAt: number
+  repoUrl?: string | null
 }
 
 export type CategoryId =

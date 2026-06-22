@@ -7,7 +7,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const { name, techStack, description, status } = await request.json();
+    const { name, techStack, description, status, repoUrl } = await request.json();
 
     const updatedProject = await prisma.project.update({
       where: { id },
@@ -17,6 +17,7 @@ export async function PUT(
         description: description || "",
         status: status || "In Progress",
         updatedAt: BigInt(Date.now()),
+        repoUrl: repoUrl || null,
       },
     });
 
@@ -27,6 +28,7 @@ export async function PUT(
       description: updatedProject.description,
       status: updatedProject.status,
       updatedAt: Number(updatedProject.updatedAt),
+      repoUrl: updatedProject.repoUrl,
     });
   } catch (err: any) {
     console.error("PUT /api/projects/[id] error:", err);
