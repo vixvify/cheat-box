@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import type { Project } from "@prisma/client";
 
 export async function GET() {
   try {
@@ -9,7 +10,7 @@ export async function GET() {
       },
     });
 
-    const projects = rows.map((r) => ({
+    const projects = (rows as Project[]).map((r) => ({
       id: r.id,
       name: r.name,
       techStack: r.techStack,
