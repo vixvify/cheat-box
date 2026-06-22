@@ -20,6 +20,7 @@
     "pg": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "sweetalert2": "^11.26.25",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

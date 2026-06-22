@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", monospace;
 }
 
 *,
@@ -66,4 +66,106 @@ code,
 kbd,
 samp {
   font-family: var(--font-mono);
+}
+
+.swal2-container {
+  z-index: 99999 !important;
+}
+
+.swal2-popup {
+  background: #0f0f0f !important;
+  border: 1px solid #222 !important;
+  color: #ebebeb !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.5),
+    0 8px 10px -6px rgb(0 0 0 / 0.5) !important;
+  font-family: var(--font-sans) !important;
+}
+
+.swal2-title {
+  color: #f0f0f0 !important;
+  font-weight: 600 !important;
+}
+
+.swal2-html-container {
+  color: #999 !important;
+  font-size: 0.925rem !important;
+  line-height: 1.6 !important;
+}
+
+.swal2-input,
+.swal2-select,
+.swal2-textarea {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  color: #ebebeb !important;
+  border-radius: 6px !important;
+  font-family: inherit !important;
+}
+
+.swal2-input:focus,
+.swal2-select:focus,
+.swal2-textarea:focus {
+  border-color: #555 !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05) !important;
+}
+
+.swal2-styled {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1.25rem !important;
+  font-size: 0.875rem !important;
+}
+
+.swal2-styled.swal2-confirm {
+  background-color: #2563eb !important;
+  color: #fff !important;
+}
+
+.swal2-styled.swal2-confirm:hover {
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1)
+  ) !important;
+}
+
+.swal2-styled.swal2-confirm:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5) !important;
+}
+
+.swal2-styled.swal2-cancel {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  color: #aaa !important;
+}
+
+.swal2-styled.swal2-cancel:hover {
+  background-color: #222 !important;
+  color: #fff !important;
+}
+
+.swal2-styled.swal2-cancel:focus {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05) !important;
+}
+
+.swal2-validation-message {
+  background: #1a1515 !important;
+  color: #f87171 !important;
+  border: 1px solid #7f1d1d !important;
+  border-radius: 6px !important;
+}
+
+.swal2-toast {
+  background-color: #0f0f0f !important;
+  border: 1px solid #222 !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3) !important;
+}
+
+.swal2-toast .swal2-title {
+  color: #f0f0f0 !important;
+}
+
+.swal2-timer-progress-bar {
+  background: #3b82f6 !important;
 }

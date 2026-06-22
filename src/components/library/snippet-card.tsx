@@ -3,6 +3,7 @@
 import { CopyButton } from '@/components/ui/copy-button'
 import { TagBadge } from '@/components/ui/tag-badge'
 import { LanguageBadge } from '@/components/ui/language-badge'
+import { Play } from 'lucide-react'
 import type { CategoryId, Snippet } from '@/core/domain/snippet'
 
 interface SnippetCardProps {
@@ -11,7 +12,57 @@ interface SnippetCardProps {
   groupId: string
 }
 
-export function SnippetCard({ snippet }: SnippetCardProps) {
+export function SnippetCard({ snippet, categoryId }: SnippetCardProps) {
+  const handlePreview = async () => {
+    try {
+      const Swal = (await import('sweetalert2')).default
+
+      if (typeof window !== 'undefined') {
+        ;(window as any).Swal = Swal
+      }
+
+      const mockContext = {
+        Swal,
+        deleteItem: async (id: any) => {
+          await Swal.fire({
+            icon: 'success',
+            title: 'Mock Delete Action',
+            text: `Item with ID "${id}" was deleted (mock action).`,
+            confirmButtonColor: '#2563eb',
+          })
+        },
+        someAsyncOperation: () => new Promise((resolve) => setTimeout(resolve, 2000)),
+        saveData: () => new Promise((resolve) => setTimeout(resolve, 1500)),
+        id: '12345',
+      }
+
+      const keys = Object.keys(mockContext)
+      const values = Object.values(mockContext)
+
+      const executeFn = new Function(
+        ...keys,
+        `return (async () => {
+          try {
+            ${snippet.content}
+          } catch (err) {
+            console.error("Snippet execution error:", err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Execution Error',
+              text: err instanceof Error ? err.message : String(err),
+              confirmButtonColor: '#2563eb',
+            });
+          }
+        })()`
+      )
+
+      await executeFn(...values)
+    } catch (err: any) {
+      console.error('Failed to execute SweetAlert snippet:', err)
+      alert(`Error running preview: ${err.message || String(err)}`)
+    }
+  }
+
   return (
     <article className="group relative rounded border border-[#222] bg-[#0f0f0f] transition-colors duration-100 hover:border-[#2e2e2e]">
       <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#1a1a1a]">
@@ -21,6 +72,17 @@ export function SnippetCard({ snippet }: SnippetCardProps) {
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
+          {categoryId === 'sweetalert' && (
+            <button
+              onClick={handlePreview}
+              className="flex cursor-pointer items-center gap-1.5 rounded border border-[#333] bg-[#1a1a1a] text-[#aaa] hover:border-yellow-800 hover:bg-yellow-950/60 hover:text-yellow-400 px-2.5 py-1.5 text-xs font-medium transition-all duration-150"
+              aria-label="Preview alert"
+              title="Preview Alert"
+            >
+              <Play size={12} strokeWidth={1.5} className="shrink-0" />
+              <span>Preview</span>
+            </button>
+          )}
           <CopyButton content={snippet.content} />
         </div>
       </div>
@@ -51,3 +113,4 @@ export function SnippetCard({ snippet }: SnippetCardProps) {
     </article>
   )
 }
+
