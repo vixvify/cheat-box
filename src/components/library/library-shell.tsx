@@ -7,16 +7,19 @@ import { SnippetGroup } from '@/components/library/snippet-group'
 import { SnippetModal } from '@/components/ui/snippet-modal'
 import { GroupModal } from '@/components/ui/group-modal'
 import { MuiComponentsLibrary } from '@/components/library/mui-components-library'
+import { CurrentProjects } from '@/components/library/current-projects'
+import { AgentMd } from '@/components/library/agent-md'
 import { useLibraryStore } from '@/store/library-store'
 import { getFilteredGroups } from '@/utils/filter'
 
 export function LibraryShell() {
   const [mounted, setMounted] = useState(false)
-  const { categories, activeCategory, searchQuery } = useLibraryStore()
+  const { categories, activeCategory, searchQuery, fetchProjects } = useLibraryStore()
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    fetchProjects()
+  }, [fetchProjects])
 
   if (!mounted) {
     return (
@@ -42,6 +45,10 @@ export function LibraryShell() {
         <main className="flex-1 overflow-y-auto px-6 py-6">
           {activeCategory === 'mui-components' ? (
             <MuiComponentsLibrary />
+          ) : activeCategory === 'current-projects' ? (
+            <CurrentProjects />
+          ) : activeCategory === 'agent-md' ? (
+            <AgentMd />
           ) : (
             <>
               {searchQuery && (
@@ -86,3 +93,4 @@ export function LibraryShell() {
     </div>
   )
 }
+

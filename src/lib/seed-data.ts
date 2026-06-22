@@ -3,6 +3,8 @@ import { createProjectGroups } from '@/core/data/create-project'
 import { npmInstallGroups } from '@/core/data/npm-install'
 import { sweetalertGroups } from '@/core/data/sweetalert'
 import { folderStructureGroups } from '@/core/data/folder-structure'
+import { gitCommandsGroups } from '@/core/data/git-commands'
+import { dockerCommandsGroups } from '@/core/data/docker-commands'
 
 export function getDefaultCategories(): Category[] {
   return [
@@ -33,6 +35,20 @@ export function getDefaultCategories(): Category[] {
       icon: '📁',
       description: 'โครงสร้าง folder เบื้องต้นสำหรับ Next.js, Go, และ Elysia',
       groups: folderStructureGroups,
+    },
+    {
+      id: 'git-commands',
+      label: 'Git Commands',
+      icon: '🌿',
+      description: 'คำสั่ง Git ที่ใช้บ่อยในการจัดการโค้ดและการทำงานร่วมกัน',
+      groups: gitCommandsGroups,
+    },
+    {
+      id: 'docker-commands',
+      label: 'Docker Commands',
+      icon: '🐳',
+      description: 'คำสั่ง Docker ที่ใช้บ่อยในการจัดการอิมเมจ คอนเทนเนอร์ และเน็ตเวิร์ก',
+      groups: dockerCommandsGroups,
     },
   ]
 }

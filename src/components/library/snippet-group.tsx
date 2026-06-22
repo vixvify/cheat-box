@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { SnippetCard } from "./snippet-card";
-import { useLibraryStore } from "@/store/library-store";
 import type {
   CategoryId,
   SnippetGroup as SnippetGroupType,
@@ -16,18 +15,6 @@ interface SnippetGroupProps {
 
 export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const { openAddSnippetModal, openEditGroupModal, deleteGroup } =
-    useLibraryStore();
-
-  const handleDeleteGroup = () => {
-    if (confirmDelete) {
-      deleteGroup(categoryId, group.id);
-    } else {
-      setConfirmDelete(true);
-      setTimeout(() => setConfirmDelete(false), 3000);
-    }
-  };
 
   return (
     <section className="mb-10">
@@ -55,35 +42,6 @@ export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
             {group.snippets.length}
           </span>
         </button>
-
-        <div className="flex shrink-0 items-center gap-1">
-          <button
-            onClick={() => openAddSnippetModal(categoryId, group.id)}
-            className="flex cursor-pointer items-center gap-1 rounded border border-[#222] bg-[#111] px-2 py-1 text-xs text-[#888] transition-colors hover:border-[#333] hover:text-[#ccc]"
-            title="Add snippet"
-          >
-            <Plus size={12} strokeWidth={2} />
-            Add
-          </button>
-          <button
-            onClick={() => openEditGroupModal(categoryId, group)}
-            className="cursor-pointer rounded p-1.5 text-[#555] transition-colors hover:bg-white/5 hover:text-[#aaa]"
-            title="Edit group"
-          >
-            <Pencil size={12} strokeWidth={1.5} />
-          </button>
-          <button
-            onClick={handleDeleteGroup}
-            className={`cursor-pointer rounded p-1.5 transition-colors ${
-              confirmDelete
-                ? "bg-red-950/40 text-red-400"
-                : "text-[#555] hover:bg-red-950/30 hover:text-red-400"
-            }`}
-            title={confirmDelete ? "Click again to confirm" : "Delete group"}
-          >
-            <Trash2 size={12} strokeWidth={1.5} />
-          </button>
-        </div>
       </div>
 
       {isExpanded && (
@@ -91,12 +49,6 @@ export function SnippetGroup({ group, categoryId }: SnippetGroupProps) {
           {group.snippets.length === 0 ? (
             <div className="rounded border border-dashed border-[#1e1e1e] py-10 text-center">
               <p className="text-sm text-[#666]">ยังไม่มี snippet ในกลุ่มนี้</p>
-              <button
-                onClick={() => openAddSnippetModal(categoryId, group.id)}
-                className="mt-2 cursor-pointer rounded border border-[#222] bg-[#111] px-3 py-1.5 text-sm text-[#888] transition-colors hover:border-[#333] hover:text-white"
-              >
-                + เพิ่ม snippet
-              </button>
             </div>
           ) : (
             group.snippets.map((snippet) => (

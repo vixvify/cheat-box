@@ -3,27 +3,46 @@
 import { useLibraryStore } from "@/store/library-store";
 import { CATEGORY_ORDER, CATEGORY_META } from "@/core/constants/categories";
 import type { CategoryId } from "@/core/domain/snippet";
+import { AGENT_GUIDELINES } from "@/core/data/agent-guidelines";
+import { MUI_COMPONENTS_DATA } from "@/core/data/mui-components-data";
 import {
   Terminal,
   Package,
   Layers,
   FolderOpen,
   Palette,
+  Briefcase,
+  GitBranch,
+  Box,
+  Bot,
   type LucideIcon,
 } from "lucide-react";
 
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
+  "current-projects": Briefcase,
   "create-project": Terminal,
   "npm-install": Package,
   sweetalert: Layers,
   "folder-structure": FolderOpen,
   "mui-components": Palette,
+  "git-commands": GitBranch,
+  "docker-commands": Box,
+  "agent-md": Bot,
 };
 
 export function Sidebar() {
-  const { activeCategory, setActiveCategory, categories } = useLibraryStore();
+  const { activeCategory, setActiveCategory, categories, projects } = useLibraryStore();
 
   const getSnippetCount = (categoryId: CategoryId) => {
+    if (categoryId === "current-projects") {
+      return projects.length;
+    }
+    if (categoryId === "agent-md") {
+      return AGENT_GUIDELINES.length;
+    }
+    if (categoryId === "mui-components") {
+      return MUI_COMPONENTS_DATA.length;
+    }
     const cat = categories.find((c) => c.id === categoryId);
     return cat?.groups.reduce((acc, g) => acc + g.snippets.length, 0) ?? 0;
   };

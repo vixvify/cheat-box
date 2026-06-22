@@ -28,12 +28,25 @@ export interface SnippetGroup {
   snippets: Snippet[]
 }
 
+export interface Project {
+  id: string
+  name: string
+  techStack: string
+  description: string
+  status: 'In Progress' | 'Completed' | 'Planning' | 'On Hold'
+  updatedAt: number
+}
+
 export type CategoryId =
+  | 'current-projects'
   | 'create-project'
   | 'npm-install'
   | 'sweetalert'
   | 'folder-structure'
   | 'mui-components'
+  | 'git-commands'
+  | 'docker-commands'
+  | 'agent-md'
 
 export interface Category {
   id: CategoryId

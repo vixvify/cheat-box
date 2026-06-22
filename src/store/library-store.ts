@@ -5,6 +5,7 @@ import type {
   CategoryId,
   Snippet,
   SnippetGroup,
+  Project,
 } from "@/core/domain/snippet";
 import { getDefaultCategories } from "@/lib/seed-data";
 
@@ -26,6 +27,7 @@ const DEFAULT_MODAL: ModalState = {
 
 interface LibraryStore {
   categories: Category[];
+  projects: Project[];
 
   activeCategory: CategoryId;
   searchQuery: string;
@@ -74,14 +76,31 @@ interface LibraryStore {
   ) => void;
   deleteGroup: (categoryId: CategoryId, groupId: string) => void;
 
-  resetToDefaults: () => void;
+  fetchProjects: () => Promise<void>;
+  addProject: (
+    name: string,
+    techStack: string,
+    description: string,
+    status: Project["status"],
+  ) => Promise<void>;
+  updateProject: (
+    id: string,
+    name: string,
+    techStack: string,
+    description: string,
+    status: Project["status"],
+  ) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+
+  resetToDefaults: () => Promise<void>;
 }
 
 export const useLibraryStore = create<LibraryStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       categories: getDefaultCategories(),
-      activeCategory: "create-project",
+      projects: [],
+      activeCategory: "current-projects",
       searchQuery: "",
       modal: DEFAULT_MODAL,
 
@@ -257,17 +276,119 @@ export const useLibraryStore = create<LibraryStore>()(
           ),
         })),
 
-      resetToDefaults: () =>
-        set({
-          categories: getDefaultCategories(),
-          activeCategory: "create-project",
-          searchQuery: "",
-          modal: DEFAULT_MODAL,
-        }),
+      fetchProjects: async () => {
+        try {
+          const res = await fetch("/api/projects");
+          if (res.ok) {
+            const data = await res.json();
+            set({ projects: data });
+          }
+        } catch (err) {
+          console.error("Error fetching projects from API:", err);
+        }
+      },
+
+      addProject: async (name, techStack, description, status) => {
+        try {
+          const res = await fetch("/api/projects", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, techStack, description, status }),
+          });
+          if (res.ok) {
+            const newProject = await res.json();
+            set((state) => ({
+              projects: [newProject, ...state.projects],
+            }));
+          }
+        } catch (err) {
+          console.error("Error adding project to API:", err);
+        }
+      },
+
+      updateProject: async (id, name, techStack, description, status) => {
+        try {
+          const res = await fetch(`/api/projects/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, techStack, description, status }),
+          });
+          if (res.ok) {
+            const updatedProject = await res.json();
+            set((state) => ({
+              projects: state.projects.map((p) =>
+                p.id === id ? updatedProject : p,
+              ),
+            }));
+          }
+        } catch (err) {
+          console.error("Error updating project via API:", err);
+        }
+      },
+
+      deleteProject: async (id) => {
+        try {
+          const res = await fetch(`/api/projects/${id}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            set((state) => ({
+              projects: state.projects.filter((p) => p.id !== id),
+            }));
+          }
+        } catch (err) {
+          console.error("Error deleting project via API:", err);
+        }
+      },
+
+      resetToDefaults: async () => {
+        try {
+          const res = await fetch("/api/projects/reset", {
+            method: "POST",
+          });
+          if (res.ok) {
+            set({
+              categories: getDefaultCategories(),
+              activeCategory: "current-projects",
+              searchQuery: "",
+              modal: DEFAULT_MODAL,
+            });
+            await get().fetchProjects();
+          }
+        } catch (err) {
+          console.error("Error resetting defaults:", err);
+        }
+      },
     }),
     {
       name: "dev-library-storage",
-      partialize: (state) => ({ categories: state.categories }),
+      partialize: (state) => ({
+        categories: state.categories,
+      }),
+      merge: (persistedState: any, currentState) => {
+        if (!persistedState) return currentState;
+
+        const mergedCategories = [...currentState.categories];
+        if (Array.isArray(persistedState.categories)) {
+          persistedState.categories.forEach((pCat: any) => {
+            const index = mergedCategories.findIndex((c) => c.id === pCat.id);
+            if (index !== -1) {
+              mergedCategories[index] = pCat;
+            }
+          });
+        }
+
+        return {
+          ...currentState,
+          ...persistedState,
+          categories: mergedCategories,
+          projects: currentState.projects,
+        };
+      },
     },
   ),
 );

@@ -1,17 +1,26 @@
 import type { CategoryId } from '../domain/snippet'
 
 export const CATEGORY_ORDER: CategoryId[] = [
+  'current-projects',
   'create-project',
   'npm-install',
   'sweetalert',
   'folder-structure',
   'mui-components',
+  'git-commands',
+  'docker-commands',
+  'agent-md',
 ]
 
 export const CATEGORY_META: Record<
   CategoryId,
   { label: string; icon: string; description: string }
 > = {
+  'current-projects': {
+    label: 'Current Projects',
+    icon: '💼',
+    description: 'บันทึกงานที่กำลังทำอยู่และติดตามสถานะโปรเจคต่าง ๆ สามารถ เพิ่ม แก้ไข ลบ ข้อมูลได้',
+  },
   'create-project': {
     label: 'Create Project',
     icon: '🚀',
@@ -36,6 +45,21 @@ export const CATEGORY_META: Record<
     label: 'MUI Components',
     icon: '🎨',
     description: 'แหล่งรวม Material UI (MUI) components ที่ใช้บ่อย พร้อมตัวอย่าง preview และโค้ดสำหรับก๊อปปี้',
+  },
+  'git-commands': {
+    label: 'Git Commands',
+    icon: '🌿',
+    description: 'คำสั่ง Git ที่ใช้บ่อยในการจัดการโค้ดและการทำงานร่วมกัน',
+  },
+  'docker-commands': {
+    label: 'Docker Commands',
+    icon: '🐳',
+    description: 'คำสั่ง Docker ที่ใช้บ่อยในการจัดการอิมเมจ คอนเทนเนอร์ และเน็ตเวิร์ก',
+  },
+  'agent-md': {
+    label: 'Agent Guidelines',
+    icon: '🤖',
+    description: 'แนวทางปฏิบัติตามมาตรฐานสำหรับ Frontend และ Backend AI Coding Assistant',
   },
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Plus,
   RotateCcw,
   Search,
   Terminal,
@@ -9,6 +8,10 @@ import {
   Layers,
   FolderOpen,
   Palette,
+  Briefcase,
+  GitBranch,
+  Box,
+  Bot,
   type LucideIcon,
 } from "lucide-react";
 import { useLibraryStore } from "@/store/library-store";
@@ -16,11 +19,15 @@ import { CATEGORY_META } from "@/core/constants/categories";
 import type { CategoryId } from "@/core/domain/snippet";
 
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
+  "current-projects": Briefcase,
   "create-project": Terminal,
   "npm-install": Package,
   sweetalert: Layers,
   "folder-structure": FolderOpen,
   "mui-components": Palette,
+  "git-commands": GitBranch,
+  "docker-commands": Box,
+  "agent-md": Bot,
 };
 
 export function Header() {
@@ -28,7 +35,6 @@ export function Header() {
     activeCategory,
     searchQuery,
     setSearchQuery,
-    openAddGroupModal,
     resetToDefaults,
   } = useLibraryStore();
 
@@ -38,7 +44,7 @@ export function Header() {
   const handleReset = () => {
     if (
       window.confirm(
-        "รีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้น?\n\nSnippet และ Group ที่เพิ่มเองจะหายทั้งหมด",
+        "ต้องการลบข้อมูลโครงการทั้งหมดในระบบใช่หรือไม่?\n\nโครงการทั้งหมดจะถูกลบออกจากฐานข้อมูลอย่างถาวร",
       )
     ) {
       resetToDefaults();
@@ -68,7 +74,11 @@ export function Header() {
           id="snippet-search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search snippets..."
+          placeholder={
+            activeCategory === "current-projects"
+              ? "Search projects..."
+              : "Search snippets..."
+          }
           className="w-full rounded border border-[#222] bg-[#111] py-2 pl-9 pr-8 text-sm text-white placeholder:text-[#555] transition-colors focus:border-[#444] focus:outline-none"
         />
         {searchQuery && (
@@ -81,21 +91,13 @@ export function Header() {
         )}
       </div>
 
-      {activeCategory !== "mui-components" && (
+      {activeCategory === "current-projects" && (
         <div className="ml-auto flex items-center gap-2">
-          <button
-            id="add-group-btn"
-            onClick={() => openAddGroupModal(activeCategory)}
-            className="flex cursor-pointer items-center gap-1.5 rounded border border-[#2a2a2a] bg-[#141414] px-3.5 py-2 text-sm font-medium text-[#ccc] transition-colors hover:border-[#3a3a3a] hover:bg-[#1c1c1c] hover:text-white"
-          >
-            <Plus size={13} strokeWidth={2.5} />
-            Add Group
-          </button>
           <button
             id="reset-btn"
             onClick={handleReset}
             className="cursor-pointer rounded p-2 text-[#555] transition-colors hover:bg-[#111] hover:text-[#999]"
-            title="Reset to defaults"
+            title="ล้างข้อมูลโครงการทั้งหมด"
           >
             <RotateCcw size={14} strokeWidth={1.5} />
           </button>
