@@ -2,6 +2,7 @@ import type { CategoryId } from '../domain/snippet'
 
 export const CATEGORY_ORDER: CategoryId[] = [
   'current-projects',
+  'github-prs',
   'create-project',
   'npm-install',
   'sweetalert',
@@ -20,6 +21,11 @@ export const CATEGORY_META: Record<
     label: 'Current Projects',
     icon: '💼',
     description: 'บันทึกงานที่กำลังทำอยู่และติดตามสถานะโปรเจคต่าง ๆ สามารถ เพิ่ม แก้ไข ลบ ข้อมูลได้',
+  },
+  'github-prs': {
+    label: 'GitHub PRs',
+    icon: '🌿',
+    description: 'รายการ Pull Requests ที่เราสร้างค้างไว้ ดึงข้อมูลสดจาก GitHub API ค้นหาและดูสถานะการตรวจสอบได้',
   },
   'create-project': {
     label: 'Create Project',

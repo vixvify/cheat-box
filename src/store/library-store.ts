@@ -8,6 +8,7 @@ import type {
   Project,
 } from "@/core/domain/snippet";
 import { getDefaultCategories } from "@/lib/seed-data";
+import type { GitHubPRSearchItem } from "@/core/domain/github";
 
 interface ModalState {
   type: "add-snippet" | "edit-snippet" | "add-group" | "edit-group" | null;
@@ -94,6 +95,10 @@ interface LibraryStore {
     repoUrl?: string | null,
   ) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
+  githubPrs: GitHubPRSearchItem[];
+  isLoadingPrs: boolean;
+  prsError: string | null;
+  fetchGithubPrs: () => Promise<void>;
 
   resetToDefaults: () => Promise<void>;
 }
@@ -104,6 +109,9 @@ export const useLibraryStore = create<LibraryStore>()(
       categories: getDefaultCategories(),
       projects: [],
       isLoadingProjects: false,
+      githubPrs: [],
+      isLoadingPrs: false,
+      prsError: null,
       activeCategory: "current-projects",
       searchQuery: "",
       modal: DEFAULT_MODAL,
@@ -352,6 +360,25 @@ export const useLibraryStore = create<LibraryStore>()(
         }
       },
 
+      fetchGithubPrs: async () => {
+        set({ isLoadingPrs: true, prsError: null });
+        try {
+          const res = await fetch("/api/github/prs");
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || `Failed to fetch PRs (HTTP ${res.status})`);
+          }
+          const prs = await res.json();
+          set({ githubPrs: prs, prsError: null });
+        } catch (err: unknown) {
+          console.error("Error fetching GitHub PRs:", err);
+          const errMsg = err instanceof Error ? err.message : "Failed to fetch Pull Requests.";
+          set({ prsError: errMsg });
+        } finally {
+          set({ isLoadingPrs: false });
+        }
+      },
+
       resetToDefaults: async () => {
         try {
           const res = await fetch("/api/projects/reset", {
@@ -376,12 +403,13 @@ export const useLibraryStore = create<LibraryStore>()(
       partialize: (state) => ({
         categories: state.categories,
       }),
-      merge: (persistedState: any, currentState) => {
+      merge: (persistedState: unknown, currentState) => {
         if (!persistedState) return currentState;
+        const pState = persistedState as Record<string, unknown>;
 
         const mergedCategories = [...currentState.categories];
-        if (Array.isArray(persistedState.categories)) {
-          persistedState.categories.forEach((pCat: any) => {
+        if (Array.isArray(pState.categories)) {
+          (pState.categories as Category[]).forEach((pCat) => {
             const index = mergedCategories.findIndex((c) => c.id === pCat.id);
             if (index !== -1) {
               mergedCategories[index] = pCat;
@@ -391,7 +419,7 @@ export const useLibraryStore = create<LibraryStore>()(
 
         return {
           ...currentState,
-          ...persistedState,
+          ...pState,
           categories: mergedCategories,
           projects: currentState.projects,
         };

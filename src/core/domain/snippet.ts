@@ -40,6 +40,7 @@ export interface Project {
 
 export type CategoryId =
   | 'current-projects'
+  | 'github-prs'
   | 'create-project'
   | 'npm-install'
   | 'sweetalert'

@@ -12,6 +12,8 @@ import {
   GitBranch,
   Box,
   Bot,
+  GitPullRequest,
+  LogOut,
   type LucideIcon,
 } from "lucide-react";
 import { useLibraryStore } from "@/store/library-store";
@@ -20,6 +22,7 @@ import type { CategoryId } from "@/core/domain/snippet";
 
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   "current-projects": Briefcase,
+  "github-prs": GitPullRequest,
   "create-project": Terminal,
   "npm-install": Package,
   sweetalert: Layers,
@@ -51,6 +54,19 @@ export function Header() {
     }
   };
 
+  const handleLogout = async () => {
+    if (window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) {
+      try {
+        const res = await fetch("/api/auth/logout", { method: "POST" });
+        if (res.ok) {
+          window.location.href = "/login";
+        }
+      } catch (err) {
+        console.error("Logout failed:", err);
+      }
+    }
+  };
+
   return (
     <header className="flex items-center gap-4 border-b border-[#1e1e1e] bg-[#080808] px-6 py-4">
       <div className="flex shrink-0 items-center gap-2.5">
@@ -77,6 +93,8 @@ export function Header() {
           placeholder={
             activeCategory === "current-projects"
               ? "Search projects..."
+              : activeCategory === "github-prs"
+              ? "Search PRs..."
               : "Search snippets..."
           }
           className="w-full rounded border border-[#222] bg-[#111] py-2 pl-9 pr-8 text-sm text-white placeholder:text-[#555] transition-colors focus:border-[#444] focus:outline-none"
@@ -91,8 +109,8 @@ export function Header() {
         )}
       </div>
 
-      {activeCategory === "current-projects" && (
-        <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-2.5">
+        {activeCategory === "current-projects" && (
           <button
             id="reset-btn"
             onClick={handleReset}
@@ -101,8 +119,16 @@ export function Header() {
           >
             <RotateCcw size={14} strokeWidth={1.5} />
           </button>
-        </div>
-      )}
+        )}
+
+        <button
+          onClick={handleLogout}
+          className="cursor-pointer rounded p-2 text-[#555] transition-colors hover:bg-[#111] hover:text-red-400"
+          title="ออกจากระบบ"
+        >
+          <LogOut size={14} strokeWidth={1.5} />
+        </button>
+      </div>
     </header>
   );
 }

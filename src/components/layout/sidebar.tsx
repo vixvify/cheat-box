@@ -15,11 +15,13 @@ import {
   GitBranch,
   Box,
   Bot,
+  GitPullRequest,
   type LucideIcon,
 } from "lucide-react";
 
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   "current-projects": Briefcase,
+  "github-prs": GitPullRequest,
   "create-project": Terminal,
   "npm-install": Package,
   sweetalert: Layers,
@@ -31,11 +33,14 @@ const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
 };
 
 export function Sidebar() {
-  const { activeCategory, setActiveCategory, categories, projects } = useLibraryStore();
+  const { activeCategory, setActiveCategory, categories, projects, githubPrs } = useLibraryStore();
 
   const getSnippetCount = (categoryId: CategoryId) => {
     if (categoryId === "current-projects") {
       return projects.length;
+    }
+    if (categoryId === "github-prs") {
+      return githubPrs.length;
     }
     if (categoryId === "agent-md") {
       return AGENT_GUIDELINES.length;

@@ -8,6 +8,7 @@ import { SnippetModal } from '@/components/ui/snippet-modal'
 import { GroupModal } from '@/components/ui/group-modal'
 import { MuiComponentsLibrary } from '@/components/library/mui-components-library'
 import { CurrentProjects } from '@/components/library/current-projects'
+import { GithubPrs } from '@/components/library/github-prs'
 import { AgentMd } from '@/components/library/agent-md'
 import { useLibraryStore } from '@/store/library-store'
 import { getFilteredGroups } from '@/utils/filter'
@@ -47,6 +48,8 @@ export function LibraryShell() {
             <MuiComponentsLibrary />
           ) : activeCategory === 'current-projects' ? (
             <CurrentProjects />
+          ) : activeCategory === 'github-prs' ? (
+            <GithubPrs />
           ) : activeCategory === 'agent-md' ? (
             <AgentMd />
           ) : (
