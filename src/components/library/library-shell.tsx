@@ -15,12 +15,13 @@ import { getFilteredGroups } from '@/utils/filter'
 
 export function LibraryShell() {
   const [mounted, setMounted] = useState(false)
-  const { categories, activeCategory, searchQuery, fetchProjects } = useLibraryStore()
+  const { categories, activeCategory, searchQuery, fetchProjects, fetchGithubPrs } = useLibraryStore()
 
   useEffect(() => {
     setMounted(true)
     fetchProjects()
-  }, [fetchProjects])
+    fetchGithubPrs()
+  }, [fetchProjects, fetchGithubPrs])
 
   if (!mounted) {
     return (
