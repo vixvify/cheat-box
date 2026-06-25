@@ -242,16 +242,41 @@ export function MuiComponentsLibrary() {
     );
   }, [selectedId]);
 
-  const [variant, setVariant] = useState<any>("contained");
-  const [color, setColor] = useState<any>("primary");
-  const [size, setSize] = useState<any>("medium");
+  const [variant, setVariant] = useState<
+    | "contained"
+    | "outlined"
+    | "text"
+    | "filled"
+    | "standard"
+    | "elevation"
+    | "indeterminate"
+    | "temporary"
+    | "fullWidth"
+    | "inset"
+    | "middle"
+  >("contained");
+  const [color, setColor] = useState<
+    | "primary"
+    | "secondary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning"
+    | "inherit"
+    | "standard"
+  >("primary");
+  const [size, setSize] = useState<"small" | "medium" | "large" | number>(
+    "medium",
+  );
   const [disabled, setDisabled] = useState(false);
   const [error, setError] = useState(false);
   const [label, setLabel] = useState("ชื่อ-นามสกุล");
   const [helperText, setHelperText] = useState("กรุณากรอกข้อมูลภาษาไทย");
   const [fullWidth, setFullWidth] = useState(false);
   const [disableElevation, setDisableElevation] = useState(false);
-  const [severity, setSeverity] = useState<any>("success");
+  const [severity, setSeverity] = useState<
+    "success" | "info" | "warning" | "error"
+  >("success");
   const [badgeCount, setBadgeCount] = useState(4);
 
   const [selectValue, setSelectValue] = useState(10);
@@ -262,14 +287,37 @@ export function MuiComponentsLibrary() {
 
   const [progressValue, setProgressValue] = useState(50);
   const [sliderValue, setSliderValue] = useState(30);
-  const [sliderValueLabel, setSliderValueLabel] = useState<any>("auto");
-  const [avatarSrc, setAvatarSrc] = useState("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80");
-  const [avatarVariant, setAvatarVariant] = useState<any>("circular");
-  const [tooltipTitle, setTooltipTitle] = useState("คำอธิบายเพิ่มเติมสำหรับการใช้งาน");
-  const [tooltipPlacement, setTooltipPlacement] = useState<any>("bottom");
+  const [sliderValueLabel, setSliderValueLabel] = useState<"auto" | "on" | "off">(
+    "auto",
+  );
+  const [avatarSrc, setAvatarSrc] = useState(
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
+  );
+  const [avatarVariant, setAvatarVariant] = useState<
+    "circular" | "rounded" | "square"
+  >("circular");
+  const [tooltipTitle, setTooltipTitle] = useState(
+    "คำอธิบายเพิ่มเติมสำหรับการใช้งาน",
+  );
+  const [tooltipPlacement, setTooltipPlacement] = useState<
+    | "bottom"
+    | "bottom-end"
+    | "bottom-start"
+    | "left-end"
+    | "left-start"
+    | "left"
+    | "right-end"
+    | "right-start"
+    | "right"
+    | "top-end"
+    | "top-start"
+    | "top"
+  >("bottom");
   const [tooltipArrow, setTooltipArrow] = useState(true);
   const [accordionExpanded, setAccordionExpanded] = useState(false);
-  const [autocompleteValue, setAutocompleteValue] = useState<string | null>("React");
+  const [autocompleteValue, setAutocompleteValue] = useState<string | null>(
+    "React",
+  );
   const [paginationCount, setPaginationCount] = useState(10);
   const [paginationPage, setPaginationPage] = useState(1);
   const [breadcrumbsSeparator, setBreadcrumbsSeparator] = useState("/");
@@ -277,24 +325,40 @@ export function MuiComponentsLibrary() {
   const [ratingValue, setRatingValue] = useState<number | null>(4);
   const [ratingPrecision, setRatingPrecision] = useState(1);
   const [ratingReadOnly, setRatingReadOnly] = useState(false);
-  const [skeletonVariant, setSkeletonVariant] = useState<any>("rectangular");
-  const [skeletonAnimation, setSkeletonAnimation] = useState<any>("wave");
-  const [skeletonWidth, setSkeletonWidth] = useState<any>("100%");
-  const [skeletonHeight, setSkeletonHeight] = useState<any>(118);
+  const [skeletonVariant, setSkeletonVariant] = useState<
+    "text" | "rectangular" | "rounded" | "circular"
+  >("rectangular");
+  const [skeletonAnimation, setSkeletonAnimation] = useState<
+    "pulse" | "wave" | false
+  >("wave");
+  const [skeletonWidth, setSkeletonWidth] = useState<string | number>("100%");
+  const [skeletonHeight, setSkeletonHeight] = useState<string | number>(118);
 
-  const [orientation, setOrientation] = useState<any>("horizontal");
+  const [orientation, setOrientation] = useState<"horizontal" | "vertical">(
+    "horizontal",
+  );
   const [radioValue, setRadioValue] = useState("female");
   const [dense, setDense] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [alternativeLabel, setAlternativeLabel] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [anchor, setAnchor] = useState<any>("left");
-  const [position, setPosition] = useState<any>("static");
+  const [anchor, setAnchor] = useState<"left" | "top" | "right" | "bottom">(
+    "left",
+  );
+  const [position, setPosition] = useState<
+    "static" | "fixed" | "absolute" | "sticky" | "relative"
+  >("static");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [direction, setDirection] = useState<any>("up");
+  const [direction, setDirection] = useState<
+    "up" | "down" | "left" | "right"
+  >("up");
   const [hidden, setHidden] = useState(false);
-  const [dividerOrientation, setDividerOrientation] = useState<any>("horizontal");
-  const [dividerTextAlign, setDividerTextAlign] = useState<any>("center");
+  const [dividerOrientation, setDividerOrientation] = useState<
+    "horizontal" | "vertical"
+  >("horizontal");
+  const [dividerTextAlign, setDividerTextAlign] = useState<
+    "center" | "left" | "right"
+  >("center");
   const [gridSpacing, setGridSpacing] = useState(2);
   const [gridItemSize, setGridItemSize] = useState<number>(4);
 

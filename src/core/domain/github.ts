@@ -30,4 +30,19 @@ export interface GitHubPRSearchItem {
   html_url: string;
   repository_url: string;
   comments: number;
+  mergeable?: boolean | null;
+  mergeable_state?: string;
+  approvals_count?: number;
+  changes_requested?: boolean;
+}
+
+export interface GitHubComment {
+  id: number;
+  user: {
+    login: string;
+    avatar_url: string;
+  };
+  body: string;
+  created_at: string;
+  html_url: string;
 }
