@@ -250,7 +250,10 @@ export function MuiComponentsLibrary() {
     | "standard"
     | "elevation"
     | "indeterminate"
+    | "determinate"
     | "temporary"
+    | "persistent"
+    | "permanent"
     | "fullWidth"
     | "inset"
     | "middle"
@@ -264,6 +267,7 @@ export function MuiComponentsLibrary() {
     | "warning"
     | "inherit"
     | "standard"
+    | "default"
   >("primary");
   const [size, setSize] = useState<"small" | "medium" | "large" | number>(
     "medium",
@@ -329,7 +333,7 @@ export function MuiComponentsLibrary() {
     "text" | "rectangular" | "rounded" | "circular"
   >("rectangular");
   const [skeletonAnimation, setSkeletonAnimation] = useState<
-    "pulse" | "wave" | false
+    "pulse" | "wave" | "false"
   >("wave");
   const [skeletonWidth, setSkeletonWidth] = useState<string | number>("100%");
   const [skeletonHeight, setSkeletonHeight] = useState<string | number>(118);
@@ -1158,9 +1162,18 @@ ${itemsCode}
                   
                   {activeComp.id === "button" && (
                     <Button
-                      variant={variant}
-                      color={color}
-                      size={size}
+                      variant={variant as "text" | "outlined" | "contained"}
+                      color={
+                        color as
+                          | "inherit"
+                          | "primary"
+                          | "secondary"
+                          | "success"
+                          | "error"
+                          | "info"
+                          | "warning"
+                      }
+                      size={size as "small" | "medium" | "large"}
                       disabled={disabled}
                       disableElevation={disableElevation}
                       fullWidth={fullWidth}
@@ -1173,9 +1186,21 @@ ${itemsCode}
                     <div className="w-full max-w-sm">
                       <TextField
                         label={label}
-                        variant={variant === "contained" || variant === "text" ? "outlined" : variant}
-                        color={color}
-                        size={size}
+                        variant={
+                          (variant === "contained" || variant === "text"
+                            ? "outlined"
+                            : variant) as "outlined" | "filled" | "standard"
+                        }
+                        color={
+                          color as
+                            | "primary"
+                            | "secondary"
+                            | "success"
+                            | "error"
+                            | "info"
+                            | "warning"
+                        }
+                        size={size as "small" | "medium"}
                         error={error}
                         disabled={disabled}
                         fullWidth={fullWidth}
@@ -1187,7 +1212,10 @@ ${itemsCode}
 
                   {activeComp.id === "select" && (
                     <div className="w-full max-w-xs">
-                      <FormControl fullWidth={fullWidth} size={size}>
+                      <FormControl
+                        fullWidth={fullWidth}
+                        size={size as "small" | "medium"}
+                      >
                         <InputLabel id="preview-select-label">
                           ตัวเลือก
                         </InputLabel>
@@ -1199,7 +1227,11 @@ ${itemsCode}
                           onChange={(e) =>
                             setSelectValue(Number(e.target.value))
                           }
-                          variant={variant === "contained" || variant === "text" ? "outlined" : variant}
+                          variant={
+                            (variant === "contained" || variant === "text"
+                              ? "outlined"
+                              : variant) as "outlined" | "filled" | "standard"
+                          }
                           disabled={disabled}
                         >
                           <MenuItem value={10}>ตัวเลือกที่ 1</MenuItem>
@@ -1219,8 +1251,21 @@ ${itemsCode}
                             onChange={(e) =>
                               setCheckboxChecked(e.target.checked)
                             }
-                            color={color}
-                            size={size === "large" ? "medium" : size}
+                            color={
+                              color as
+                                | "primary"
+                                | "secondary"
+                                | "success"
+                                | "error"
+                                | "info"
+                                | "warning"
+                                | "default"
+                            }
+                            size={
+                              (size === "large" ? "medium" : size) as
+                                | "small"
+                                | "medium"
+                            }
                             disabled={disabled}
                           />
                         }
@@ -1231,8 +1276,21 @@ ${itemsCode}
                           <Switch
                             checked={switchChecked}
                             onChange={(e) => setSwitchChecked(e.target.checked)}
-                            color={color}
-                            size={size === "large" ? "medium" : size}
+                            color={
+                              color as
+                                | "primary"
+                                | "secondary"
+                                | "success"
+                                | "error"
+                                | "info"
+                                | "warning"
+                                | "default"
+                            }
+                            size={
+                              (size === "large" ? "medium" : size) as
+                                | "small"
+                                | "medium"
+                            }
                             disabled={disabled}
                           />
                         }
@@ -1340,7 +1398,13 @@ ${itemsCode}
                       }}
                     >
                       <Table
-                        size={size === "large" ? "medium" : size}
+                        size={
+                          (size === "large"
+                            ? "medium"
+                            : size === "small"
+                            ? "small"
+                            : "medium") as "medium" | "small"
+                        }
                         aria-label="simple table"
                       >
                         <TableHead>
@@ -1403,7 +1467,11 @@ ${itemsCode}
                   {activeComp.id === "alert" && (
                     <Alert
                       severity={severity}
-                      variant={variant === "contained" || variant === "text" ? "standard" : variant}
+                      variant={
+                        (variant === "contained" || variant === "text"
+                          ? "standard"
+                          : variant) as "standard" | "filled" | "outlined"
+                      }
                       sx={{ width: "100%" }}
                       onClose={() => alert("คลิกปิด Alert")}
                     >
@@ -1415,7 +1483,20 @@ ${itemsCode}
                   {activeComp.id === "badge-chip" && (
                     <div className="flex flex-col gap-6 items-center">
                       <div className="flex gap-2">
-                        <Badge badgeContent={badgeCount} color={color} max={99}>
+                        <Badge
+                          badgeContent={badgeCount}
+                          color={
+                            color as
+                              | "default"
+                              | "primary"
+                              | "secondary"
+                              | "error"
+                              | "info"
+                              | "success"
+                              | "warning"
+                          }
+                          max={99}
+                        >
                           <MailIcon sx={{ color: "#bbb" }} />
                         </Badge>
                         <div className="flex gap-1 ml-4 border border-[#222] bg-[#111] rounded px-1">
@@ -1438,13 +1519,39 @@ ${itemsCode}
                       <div className="flex flex-wrap gap-2 justify-center">
                         <Chip
                           label="MUI Chip"
-                          variant={variant === "outlined" ? "outlined" : "filled"}
-                          color={color === "inherit" ? "default" : color}
+                          variant={
+                            variant === "outlined" ? "outlined" : "filled"
+                          }
+                          color={
+                            (color === "inherit"
+                              ? "default"
+                              : color) as
+                                | "default"
+                                | "primary"
+                                | "secondary"
+                                | "error"
+                                | "info"
+                                | "success"
+                                | "warning"
+                          }
                         />
                         <Chip
                           label="Deletable Chip"
-                          variant={variant === "outlined" ? "outlined" : "filled"}
-                          color={color === "inherit" ? "default" : color}
+                          variant={
+                            variant === "outlined" ? "outlined" : "filled"
+                          }
+                          color={
+                            (color === "inherit"
+                              ? "default"
+                              : color) as
+                                | "default"
+                                | "primary"
+                                | "secondary"
+                                | "error"
+                                | "info"
+                                | "success"
+                                | "warning"
+                          }
                           onDelete={() => alert("ลบ Chip เรียบร้อย")}
                           className="cursor-pointer"
                         />
@@ -1466,11 +1573,15 @@ ${itemsCode}
                         <Tabs
                           value={tabsValue}
                           onChange={(e, nv) => setTabsValue(nv)}
-                          textColor={color === "default" ? "inherit" : color}
+                          textColor={
+                            color === "default"
+                              ? "inherit"
+                              : (color as "inherit" | "primary" | "secondary")
+                          }
                           indicatorColor={
                             color === "default" || color === "inherit"
                               ? "primary"
-                              : color
+                              : (color as "primary" | "secondary")
                           }
                           centered={fullWidth}
                         >
@@ -1511,15 +1622,47 @@ ${itemsCode}
                   {activeComp.id === "progress" && (
                     <Box sx={{ width: "100%", maxWidth: 300, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                       <CircularProgress
-                        variant={variant === "determinate" ? "determinate" : "indeterminate"}
-                        color={color}
-                        value={variant === "determinate" ? progressValue : undefined}
-                        size={size === "small" ? 30 : size === "large" ? 60 : 40}
+                        variant={
+                          variant === "determinate"
+                            ? "determinate"
+                            : "indeterminate"
+                        }
+                        color={
+                          color as
+                            | "primary"
+                            | "secondary"
+                            | "success"
+                            | "error"
+                            | "info"
+                            | "warning"
+                            | "inherit"
+                        }
+                        value={
+                          variant === "determinate" ? progressValue : undefined
+                        }
+                        size={
+                          size === "small" ? 30 : size === "large" ? 60 : 40
+                        }
                       />
                       <LinearProgress
-                        variant={variant === "determinate" ? "determinate" : "indeterminate"}
-                        color={color}
-                        value={variant === "determinate" ? progressValue : undefined}
+                        variant={
+                          variant === "determinate"
+                            ? "determinate"
+                            : "indeterminate"
+                        }
+                        color={
+                          color as
+                            | "primary"
+                            | "secondary"
+                            | "success"
+                            | "error"
+                            | "info"
+                            | "warning"
+                            | "inherit"
+                        }
+                        value={
+                          variant === "determinate" ? progressValue : undefined
+                        }
                         sx={{ width: "100%" }}
                       />
                     </Box>
@@ -1533,7 +1676,7 @@ ${itemsCode}
                         min={0}
                         max={100}
                         step={10}
-                        color={color}
+                        color={color as "primary" | "secondary"}
                         disabled={disabled}
                         valueLabelDisplay={sliderValueLabel}
                       />
@@ -1547,17 +1690,50 @@ ${itemsCode}
                         src={avatarSrc}
                         variant={avatarVariant}
                         sx={{
-                          width: size === "small" ? 32 : size === "large" ? 56 : 40,
-                          height: size === "small" ? 32 : size === "large" ? 56 : 40,
+                          width:
+                            typeof size === "number"
+                              ? size
+                              : size === "small"
+                              ? 32
+                              : size === "large"
+                              ? 56
+                              : 40,
+                          height:
+                            typeof size === "number"
+                              ? size
+                              : size === "small"
+                              ? 32
+                              : size === "large"
+                              ? 56
+                              : 40,
                         }}
                       />
                       <Avatar
                         variant={avatarVariant}
                         sx={{
                           bgcolor: "secondary.main",
-                          width: size === "small" ? 32 : size === "large" ? 56 : 40,
-                          height: size === "small" ? 32 : size === "large" ? 56 : 40,
-                          fontSize: size === "small" ? "12px" : size === "large" ? "20px" : "15px",
+                          width:
+                            typeof size === "number"
+                              ? size
+                              : size === "small"
+                              ? 32
+                              : size === "large"
+                              ? 56
+                              : 40,
+                          height:
+                            typeof size === "number"
+                              ? size
+                              : size === "small"
+                              ? 32
+                              : size === "large"
+                              ? 56
+                              : 40,
+                          fontSize:
+                            size === "small"
+                              ? "12px"
+                              : size === "large"
+                              ? "20px"
+                              : "15px",
                         }}
                       >
                         OP
@@ -1566,9 +1742,28 @@ ${itemsCode}
                         variant={avatarVariant}
                         sx={{
                           bgcolor: "primary.main",
-                          width: size === "small" ? 32 : size === "large" ? 56 : 40,
-                          height: size === "small" ? 32 : size === "large" ? 56 : 40,
-                          fontSize: size === "small" ? "12px" : size === "large" ? "20px" : "15px",
+                          width:
+                            typeof size === "number"
+                              ? size
+                              : size === "small"
+                              ? 32
+                              : size === "large"
+                              ? 56
+                              : 40,
+                          height:
+                            typeof size === "number"
+                              ? size
+                              : size === "small"
+                              ? 32
+                              : size === "large"
+                              ? 56
+                              : 40,
+                          fontSize:
+                            size === "small"
+                              ? "12px"
+                              : size === "large"
+                              ? "20px"
+                              : "15px",
                         }}
                       >
                         UI
@@ -1628,9 +1823,17 @@ ${itemsCode}
                       count={paginationCount}
                       page={paginationPage}
                       onChange={(e, p) => setPaginationPage(p)}
-                      color={color === "standard" ? "standard" : color}
+                      color={
+                        (color === "standard"
+                          ? "standard"
+                          : color) as "standard" | "primary" | "secondary"
+                      }
                       variant={variant === "outlined" ? "outlined" : "text"}
-                      shape={avatarVariant}
+                      shape={
+                        (avatarVariant === "square"
+                          ? "rounded"
+                          : avatarVariant) as "circular" | "rounded"
+                      }
                     />
                   )}
 
@@ -1654,7 +1857,7 @@ ${itemsCode}
                       value={ratingValue}
                       onChange={(e, nv) => setRatingValue(nv)}
                       precision={ratingPrecision}
-                      size={size}
+                      size={size as "small" | "medium" | "large"}
                       disabled={disabled}
                       readOnly={ratingReadOnly}
                     />
@@ -1673,10 +1876,19 @@ ${itemsCode}
 
                   {activeComp.id === "button-group" && (
                     <ButtonGroup
-                      variant={variant}
-                      color={color}
+                      variant={variant as "text" | "outlined" | "contained"}
+                      color={
+                        color as
+                          | "inherit"
+                          | "primary"
+                          | "secondary"
+                          | "success"
+                          | "error"
+                          | "info"
+                          | "warning"
+                      }
                       orientation={orientation}
-                      size={size}
+                      size={size as "small" | "medium" | "large"}
                       disabled={disabled}
                     >
                       <Button>One</Button>
@@ -1696,9 +1908,63 @@ ${itemsCode}
                         onChange={(e) => setRadioValue(e.target.value)}
                         row={alternativeLabel}
                       >
-                        <FormControlLabel value="female" control={<Radio color={color} disabled={disabled} />} label="ผู้หญิง" />
-                        <FormControlLabel value="male" control={<Radio color={color} disabled={disabled} />} label="ผู้ชาย" />
-                        <FormControlLabel value="other" control={<Radio color={color} disabled={disabled} />} label="อื่นๆ" />
+                        <FormControlLabel
+                          value="female"
+                          control={
+                            <Radio
+                              color={
+                                color as
+                                  | "primary"
+                                  | "secondary"
+                                  | "error"
+                                  | "info"
+                                  | "success"
+                                  | "warning"
+                                  | "default"
+                              }
+                              disabled={disabled}
+                            />
+                          }
+                          label="ผู้หญิง"
+                        />
+                        <FormControlLabel
+                          value="male"
+                          control={
+                            <Radio
+                              color={
+                                color as
+                                  | "primary"
+                                  | "secondary"
+                                  | "error"
+                                  | "info"
+                                  | "success"
+                                  | "warning"
+                                  | "default"
+                              }
+                              disabled={disabled}
+                            />
+                          }
+                          label="ผู้ชาย"
+                        />
+                        <FormControlLabel
+                          value="other"
+                          control={
+                            <Radio
+                              color={
+                                color as
+                                  | "primary"
+                                  | "secondary"
+                                  | "error"
+                                  | "info"
+                                  | "success"
+                                  | "warning"
+                                  | "default"
+                              }
+                              disabled={disabled}
+                            />
+                          }
+                          label="อื่นๆ"
+                        />
                       </RadioGroup>
                     </FormControl>
                   )}
@@ -1773,7 +2039,18 @@ ${itemsCode}
                         anchor={anchor}
                         open={drawerOpen}
                         onClose={() => setDrawerOpen(false)}
-                        variant={variant === "elevation" ? "temporary" : variant}
+                        variant={
+                          (variant === "elevation"
+                            ? "temporary"
+                            : variant === "temporary" ||
+                              variant === "persistent" ||
+                              variant === "permanent"
+                            ? variant
+                            : "temporary") as
+                            | "temporary"
+                            | "persistent"
+                            | "permanent"
+                        }
                         sx={{
                           "& .MuiDrawer-paper": {
                             backgroundColor: "#0c0c0c",
@@ -1814,7 +2091,25 @@ ${itemsCode}
 
                   {activeComp.id === "appbar" && (
                     <Box sx={{ width: "100%", border: "1px solid #222", borderRadius: 1, overflow: "hidden" }}>
-                      <AppBar position={position} color={color} sx={{ backgroundImage: "none" }}>
+                      <AppBar
+                        position={
+                          position as
+                            | "static"
+                            | "fixed"
+                            | "absolute"
+                            | "sticky"
+                            | "relative"
+                        }
+                        color={
+                          color as
+                            | "inherit"
+                            | "primary"
+                            | "secondary"
+                            | "default"
+                            | "transparent"
+                        }
+                        sx={{ backgroundImage: "none" }}
+                      >
                         <Toolbar>
                           <IconButton edge="start" color="inherit" sx={{ mr: 2 }} onClick={() => alert("คลิกเมนูหลัก")}>
                             <MenuIcon />
@@ -1870,7 +2165,15 @@ ${itemsCode}
                       <Typography sx={{ color: "text.secondary", mb: 1 }}>เนื้อหาตอนที่ 1</Typography>
                       <Divider
                         orientation={dividerOrientation}
-                        variant={variant === "elevation" ? "fullWidth" : variant}
+                        variant={
+                          (variant === "elevation"
+                            ? "fullWidth"
+                            : variant === "inset"
+                            ? "inset"
+                            : variant === "middle"
+                            ? "middle"
+                            : "fullWidth") as "fullWidth" | "inset" | "middle"
+                        }
                         textAlign={dividerTextAlign}
                         sx={{ my: 2, borderColor: "#222" }}
                       >
@@ -1988,7 +2291,7 @@ ${itemsCode}
                 </label>
                 <select
                   value={variant}
-                  onChange={(e) => setVariant(e.target.value)}
+                  onChange={(e) => setVariant(e.target.value as "contained" | "outlined" | "text" | "filled" | "standard" | "elevation" | "indeterminate" | "determinate" | "temporary" | "persistent" | "permanent" | "fullWidth" | "inset" | "middle")}
                   className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                 >
                   {activeComp.id === "button" && (
@@ -2099,7 +2402,7 @@ ${itemsCode}
                 </label>
                 <select
                   value={color}
-                  onChange={(e) => setColor(e.target.value)}
+                  onChange={(e) => setColor(e.target.value as "primary" | "secondary" | "success" | "error" | "info" | "warning" | "inherit" | "standard" | "default")}
                   className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                 >
                   {activeComp.id === "pagination" ? (
@@ -2157,7 +2460,7 @@ ${itemsCode}
                 </label>
                 <select
                   value={size}
-                  onChange={(e) => setSize(e.target.value)}
+                  onChange={(e) => setSize(e.target.value as "small" | "medium" | "large" | number)}
                   className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                 >
                   {activeComp.id === "dialog" ? (
@@ -2199,7 +2502,7 @@ ${itemsCode}
                 </label>
                 <select
                   value={severity}
-                  onChange={(e) => setSeverity(e.target.value)}
+                  onChange={(e) => setSeverity(e.target.value as "success" | "info" | "warning" | "error")}
                   className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                 >
                   <option value="success">success (สำเร็จ - สีเขียว)</option>
@@ -2277,7 +2580,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={sliderValueLabel}
-                    onChange={(e) => setSliderValueLabel(e.target.value)}
+                    onChange={(e) => setSliderValueLabel(e.target.value as "auto" | "on" | "off")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="on">on (แสดงค้าง)</option>
@@ -2296,7 +2599,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={avatarVariant}
-                    onChange={(e) => setAvatarVariant(e.target.value)}
+                    onChange={(e) => setAvatarVariant(e.target.value as "circular" | "rounded" | "square")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="circular">circular (วงกลม)</option>
@@ -2337,7 +2640,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={tooltipPlacement}
-                    onChange={(e) => setTooltipPlacement(e.target.value)}
+                    onChange={(e) => setTooltipPlacement(e.target.value as "bottom" | "bottom-end" | "bottom-start" | "left-end" | "left-start" | "left" | "right-end" | "right-start" | "right" | "top-end" | "top-start" | "top")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="top">top (ด้านบน)</option>
@@ -2376,7 +2679,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={avatarVariant}
-                    onChange={(e) => setAvatarVariant(e.target.value)}
+                    onChange={(e) => setAvatarVariant(e.target.value as "circular" | "rounded" | "square")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="circular">circular (วงกลม)</option>
@@ -2468,7 +2771,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={skeletonAnimation}
-                    onChange={(e) => setSkeletonAnimation(e.target.value)}
+                    onChange={(e) => setSkeletonAnimation(e.target.value as "pulse" | "wave" | "false")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="wave">wave (เลื่อนผ่านเหมือนคลื่น)</option>
@@ -2500,7 +2803,7 @@ ${itemsCode}
                 </label>
                 <select
                   value={orientation}
-                  onChange={(e) => setOrientation(e.target.value)}
+                  onChange={(e) => setOrientation(e.target.value as "horizontal" | "vertical")}
                   className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                 >
                   <option value="horizontal">horizontal (แนวนอน)</option>
@@ -2559,7 +2862,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={orientation}
-                    onChange={(e) => setOrientation(e.target.value)}
+                    onChange={(e) => setOrientation(e.target.value as "horizontal" | "vertical")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="horizontal">horizontal (แนวนอน)</option>
@@ -2588,7 +2891,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={anchor}
-                    onChange={(e) => setAnchor(e.target.value)}
+                    onChange={(e) => setAnchor(e.target.value as "left" | "top" | "right" | "bottom")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="left">left (ซ้าย)</option>
@@ -2603,7 +2906,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={variant}
-                    onChange={(e) => setVariant(e.target.value)}
+                    onChange={(e) => setVariant(e.target.value as "contained" | "outlined" | "text" | "filled" | "standard" | "elevation" | "indeterminate" | "determinate" | "temporary" | "persistent" | "permanent" | "fullWidth" | "inset" | "middle")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="temporary">temporary (ชั่วคราวคลิกปิดได้)</option>
@@ -2621,7 +2924,7 @@ ${itemsCode}
                 </label>
                 <select
                   value={position}
-                  onChange={(e) => setPosition(e.target.value)}
+                  onChange={(e) => setPosition(e.target.value as "static" | "fixed" | "absolute" | "sticky" | "relative")}
                   className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                 >
                   <option value="static">static (ไหลตามการเลื่อนปกติ)</option>
@@ -2641,7 +2944,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={direction}
-                    onChange={(e) => setDirection(e.target.value)}
+                    onChange={(e) => setDirection(e.target.value as "up" | "down" | "left" | "right")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="up">up (ลอยขึ้นด้านบน)</option>
@@ -2672,7 +2975,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={dividerOrientation}
-                    onChange={(e) => setDividerOrientation(e.target.value)}
+                    onChange={(e) => setDividerOrientation(e.target.value as "horizontal" | "vertical")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="horizontal">horizontal (แนวนอน)</option>
@@ -2685,7 +2988,7 @@ ${itemsCode}
                   </label>
                   <select
                     value={dividerTextAlign}
-                    onChange={(e) => setDividerTextAlign(e.target.value)}
+                    onChange={(e) => setDividerTextAlign(e.target.value as "center" | "left" | "right")}
                     className="w-full cursor-pointer rounded border border-[#1e1e1e] bg-black px-2.5 py-1.5 text-xs text-white focus:border-[#444] focus:outline-none"
                   >
                     <option value="center">center (อยู่กึ่งกลาง)</option>

@@ -12,6 +12,35 @@ import {
 import type { GitHubPRSearchItem, GitHubComment } from "@/core/domain/github";
 import { getContrastColor, getRepoName } from "@/utils/github-utils";
 
+function DiffHunk({ diffHunk }: { diffHunk: string }) {
+  const lines = diffHunk.split("\n").filter((line, index, array) => {
+    if (index === array.length - 1 && !line.trim()) {
+      return false;
+    }
+    return true;
+  });
+
+  return (
+    <pre className="text-[10px] font-mono leading-relaxed overflow-x-auto whitespace-pre">
+      {lines.map((line, idx) => {
+        let className = "text-[#666] px-2.5 block w-full";
+        if (line.startsWith("+")) {
+          className = "text-emerald-400 bg-emerald-950/20 px-2.5 block w-full";
+        } else if (line.startsWith("-")) {
+          className = "text-rose-400 bg-rose-950/20 px-2.5 block w-full";
+        } else if (line.startsWith("@@")) {
+          className = "text-blue-400/80 bg-blue-950/10 px-2.5 block w-full font-semibold";
+        }
+        return (
+          <code key={idx} className={className}>
+            {line}
+          </code>
+        );
+      })}
+    </pre>
+  );
+}
+
 interface PRCardProps {
   pr: GitHubPRSearchItem;
   expandedPrId: number | null;
@@ -264,6 +293,19 @@ export function PRCard({
                             )}
                           </a>
                         </div>
+                        {comment.path && comment.diff_hunk && (
+                          <div className="rounded border border-[#1e1e1e] bg-[#050505] overflow-hidden my-2">
+                            <div className="border-b border-[#1e1e1e] bg-[#0a0a0a] px-2.5 py-1 text-[#888] flex items-center justify-between text-[10px] font-mono">
+                              <span className="truncate">{comment.path}</span>
+                              {comment.line !== undefined && comment.line !== null && (
+                                <span className="shrink-0 text-[#555] font-semibold">L{comment.line}</span>
+                              )}
+                            </div>
+                            <div className="py-1.5 overflow-x-auto max-h-[160px]">
+                              <DiffHunk diffHunk={comment.diff_hunk} />
+                            </div>
+                          </div>
+                        )}
                         <div className="text-[#bbb] bg-[#0c0c0c] border border-[#141414] rounded px-3 py-2 whitespace-pre-wrap break-words">
                           {comment.body}
                         </div>

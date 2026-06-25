@@ -192,5 +192,8 @@ export async function fetchPRComments(
     body: c.body || "",
     created_at: c.created_at,
     html_url: c.html_url,
+    path: c.path,
+    line: c.line,
+    diff_hunk: c.diff_hunk,
   }));
 }
