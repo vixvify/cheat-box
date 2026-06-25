@@ -32,15 +32,11 @@ async function fetchDetail<T>(url: string, token?: string): Promise<T | null> {
   }
 }
 
-export async function fetchUserPRs(
-  username: string,
+async function fetchPRsByQuery(
+  searchQuery: string,
   token?: string,
 ): Promise<GitHubPRSearchItem[]> {
-  if (!username) {
-    throw new Error("GitHub username is required.");
-  }
-
-  const query = encodeURIComponent(`is:open is:pr author:${username}`);
+  const query = encodeURIComponent(searchQuery);
   const url = `https://api.github.com/search/issues?q=${query}`;
 
   const headers: Record<string, string> = {
@@ -143,6 +139,37 @@ export async function fetchUserPRs(
   );
 
   return detailedItems;
+}
+
+export async function fetchUserPRs(
+  username: string,
+  token?: string,
+): Promise<GitHubPRSearchItem[]> {
+  if (!username) {
+    throw new Error("GitHub username is required.");
+  }
+  return fetchPRsByQuery(`is:open is:pr author:${username}`, token);
+}
+
+export async function fetchReviewRequestedPRs(
+  username: string,
+  token?: string,
+): Promise<GitHubPRSearchItem[]> {
+  if (!username) {
+    throw new Error("GitHub username is required.");
+  }
+  const [prs1, prs2] = await Promise.all([
+    fetchPRsByQuery(`is:open is:pr review-requested:${username} -author:${username}`, token),
+    fetchPRsByQuery(`is:open is:pr user:${username} -author:${username}`, token),
+  ]);
+
+  const combined = [...prs1, ...prs2];
+  const uniquePRs = new Map<number, GitHubPRSearchItem>();
+  combined.forEach((pr) => {
+    uniquePRs.set(pr.id, pr);
+  });
+
+  return Array.from(uniquePRs.values());
 }
 
 export async function fetchPRComments(

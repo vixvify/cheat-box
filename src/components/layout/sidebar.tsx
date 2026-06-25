@@ -33,14 +33,14 @@ const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
 };
 
 export function Sidebar() {
-  const { activeCategory, setActiveCategory, categories, projects, githubPrs } = useLibraryStore();
+  const { activeCategory, setActiveCategory, categories, projects, githubPrs, reviewRequestedPrs } = useLibraryStore();
 
   const getSnippetCount = (categoryId: CategoryId) => {
     if (categoryId === "current-projects") {
       return projects.length;
     }
     if (categoryId === "github-prs") {
-      return githubPrs.length;
+      return githubPrs.length + reviewRequestedPrs.length;
     }
     if (categoryId === "agent-md") {
       return AGENT_GUIDELINES.length;

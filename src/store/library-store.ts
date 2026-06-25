@@ -99,6 +99,10 @@ interface LibraryStore {
   isLoadingPrs: boolean;
   prsError: string | null;
   fetchGithubPrs: () => Promise<void>;
+  reviewRequestedPrs: GitHubPRSearchItem[];
+  isLoadingReviewRequests: boolean;
+  reviewRequestsError: string | null;
+  fetchReviewRequestedPrs: () => Promise<void>;
 
   resetToDefaults: () => Promise<void>;
 }
@@ -112,6 +116,9 @@ export const useLibraryStore = create<LibraryStore>()(
       githubPrs: [],
       isLoadingPrs: false,
       prsError: null,
+      reviewRequestedPrs: [],
+      isLoadingReviewRequests: false,
+      reviewRequestsError: null,
       activeCategory: "current-projects",
       searchQuery: "",
       modal: DEFAULT_MODAL,
@@ -379,6 +386,25 @@ export const useLibraryStore = create<LibraryStore>()(
         }
       },
 
+      fetchReviewRequestedPrs: async () => {
+        set({ isLoadingReviewRequests: true, reviewRequestsError: null });
+        try {
+          const res = await fetch("/api/github/prs?type=review-requested");
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || `Failed to fetch review requested PRs (HTTP ${res.status})`);
+          }
+          const prs = await res.json();
+          set({ reviewRequestedPrs: prs, reviewRequestsError: null });
+        } catch (err: unknown) {
+          console.error("Error fetching review requested PRs:", err);
+          const errMsg = err instanceof Error ? err.message : "Failed to fetch review requested Pull Requests.";
+          set({ reviewRequestsError: errMsg });
+        } finally {
+          set({ isLoadingReviewRequests: false });
+        }
+      },
+
       resetToDefaults: async () => {
         try {
           const res = await fetch("/api/projects/reset", {
@@ -412,7 +438,39 @@ export const useLibraryStore = create<LibraryStore>()(
           (pState.categories as Category[]).forEach((pCat) => {
             const index = mergedCategories.findIndex((c) => c.id === pCat.id);
             if (index !== -1) {
-              mergedCategories[index] = pCat;
+              const currentCat = mergedCategories[index];
+              const mergedGroups = [...currentCat.groups];
+              
+              pCat.groups.forEach((pGrp) => {
+                const gIndex = mergedGroups.findIndex((g) => g.id === pGrp.id);
+                if (gIndex !== -1) {
+                  const defaultGroup = mergedGroups[gIndex];
+                  const mergedSnippets = [...defaultGroup.snippets];
+                  
+                  pGrp.snippets.forEach((pSnip) => {
+                    const sIndex = mergedSnippets.findIndex((s) => s.id === pSnip.id);
+                    if (sIndex !== -1) {
+                      mergedSnippets[sIndex] = pSnip;
+                    } else {
+                      mergedSnippets.push(pSnip);
+                    }
+                  });
+                  
+                  mergedGroups[gIndex] = {
+                    ...defaultGroup,
+                    ...pGrp,
+                    snippets: mergedSnippets,
+                  };
+                } else {
+                  mergedGroups.push(pGrp);
+                }
+              });
+              
+              mergedCategories[index] = {
+                ...currentCat,
+                ...pCat,
+                groups: mergedGroups,
+              };
             }
           });
         }

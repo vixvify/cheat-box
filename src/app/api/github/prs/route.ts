@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { fetchUserPRs } from "@/core/service/github-service";
+import { NextRequest, NextResponse } from "next/server";
+import { fetchUserPRs, fetchReviewRequestedPRs } from "@/core/service/github-service";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const username = process.env.GITHUB_USERNAME;
     const token = process.env.GITHUB_TOKEN;
@@ -13,8 +13,16 @@ export async function GET() {
       );
     }
 
-    const prs = await fetchUserPRs(username, token);
-    return NextResponse.json(prs);
+    const { searchParams } = request.nextUrl;
+    const type = searchParams.get("type");
+
+    if (type === "review-requested") {
+      const prs = await fetchReviewRequestedPRs(username, token);
+      return NextResponse.json(prs);
+    } else {
+      const prs = await fetchUserPRs(username, token);
+      return NextResponse.json(prs);
+    }
   } catch (err: unknown) {
     console.error("GET /api/github/prs error:", err);
     const errMsg =

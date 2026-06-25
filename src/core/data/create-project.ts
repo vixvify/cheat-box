@@ -207,4 +207,22 @@ export const createProjectGroups: SnippetGroup[] = [
       },
     ],
   },
+  {
+    id: 'cp-codegraph',
+    label: 'Codegraph',
+    description: 'คำสั่งสำหรับการตั้งค่าและใช้งาน Codegraph ในโปรเจค',
+    snippets: [
+      {
+        id: 'cp-codegraph-1',
+        title: 'Initialize Codegraph',
+        description: 'เริ่มต้นใช้งาน Codegraph พร้อมสร้างไฟล์คอนฟิกแบบ interactive',
+        type: 'command',
+        language: 'bash',
+        content: 'codegraph init -i',
+        tags: ['codegraph', 'init', 'cli'],
+        createdAt: now,
+        updatedAt: now,
+      },
+    ],
+  },
 ]

@@ -5,8 +5,6 @@ import { GitPullRequest, RefreshCw, AlertCircle } from "lucide-react";
 import { useLibraryStore } from "@/store/library-store";
 import type { GitHubComment } from "@/core/domain/github";
 import { getRepoName } from "@/utils/github-utils";
-import { PRStatsHeader } from "./pr-stats-header";
-import { PRFilters, PRFilterType } from "./pr-filters";
 import { PRCard } from "./pr-card";
 
 export function GithubPrs() {
@@ -15,15 +13,23 @@ export function GithubPrs() {
     isLoadingPrs,
     prsError,
     fetchGithubPrs,
+    reviewRequestedPrs,
+    isLoadingReviewRequests,
+    reviewRequestsError,
+    fetchReviewRequestedPrs,
     searchQuery,
   } = useLibraryStore();
 
-  const [activeSubFilter, setActiveSubFilter] = useState<PRFilterType>("all");
+  const [prTypeTab, setPrTypeTab] = useState<"authored" | "review-requested">("authored");
 
   const [expandedPrId, setExpandedPrId] = useState<number | null>(null);
   const [comments, setComments] = useState<Record<number, GitHubComment[]>>({});
   const [loadingComments, setLoadingComments] = useState<Record<number, boolean>>({});
   const [commentsError, setCommentsError] = useState<Record<number, string | null>>({});
+
+  const activePrs = prTypeTab === "authored" ? githubPrs : reviewRequestedPrs;
+  const isLoading = prTypeTab === "authored" ? isLoadingPrs : isLoadingReviewRequests;
+  const error = prTypeTab === "authored" ? prsError : reviewRequestsError;
 
   const handleToggleComments = async (
     prId: number,
@@ -71,30 +77,14 @@ export function GithubPrs() {
 
   useEffect(() => {
     fetchGithubPrs();
-  }, [fetchGithubPrs]);
+    fetchReviewRequestedPrs();
+  }, [fetchGithubPrs, fetchReviewRequestedPrs]);
 
   const filteredPrs = useMemo(() => {
-    let prs = githubPrs;
-
-    if (activeSubFilter === "draft") {
-      prs = prs.filter((pr) => pr.draft === true);
-    } else if (activeSubFilter === "active") {
-      prs = prs.filter((pr) => !pr.draft);
-    } else if (activeSubFilter === "readyToMerge") {
-      prs = prs.filter(
-        (pr) =>
-          pr.draft !== true &&
-          pr.mergeable === true &&
-          (pr.mergeable_state === "clean" || pr.mergeable_state === "unstable"),
-      );
-    } else if (activeSubFilter === "changesRequested") {
-      prs = prs.filter((pr) => pr.changes_requested === true);
-    }
-
     const query = searchQuery.trim().toLowerCase();
-    if (!query) return prs;
+    if (!query) return activePrs;
 
-    return prs.filter((pr) => {
+    return activePrs.filter((pr) => {
       const titleMatch = pr.title.toLowerCase().includes(query);
       const repoMatch = getRepoName(pr.repository_url)
         .toLowerCase()
@@ -104,23 +94,7 @@ export function GithubPrs() {
       );
       return titleMatch || repoMatch || labelMatch;
     });
-  }, [githubPrs, activeSubFilter, searchQuery]);
-
-  const stats = useMemo(() => {
-    const total = githubPrs.length;
-    const drafts = githubPrs.filter((pr) => pr.draft === true).length;
-    const readyToMerge = githubPrs.filter(
-      (pr) =>
-        pr.draft !== true &&
-        pr.mergeable === true &&
-        (pr.mergeable_state === "clean" || pr.mergeable_state === "unstable"),
-    ).length;
-    const changesRequested = githubPrs.filter(
-      (pr) => pr.changes_requested === true,
-    ).length;
-
-    return { total, drafts, readyToMerge, changesRequested };
-  }, [githubPrs]);
+  }, [activePrs, searchQuery]);
 
   return (
     <div className="space-y-6">
@@ -136,27 +110,53 @@ export function GithubPrs() {
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <button
-            onClick={() => fetchGithubPrs()}
-            disabled={isLoadingPrs}
+            onClick={() => {
+              fetchGithubPrs();
+              fetchReviewRequestedPrs();
+            }}
+            disabled={isLoading}
             className="flex cursor-pointer items-center gap-1.5 rounded border border-[#2a2a2a] bg-[#111] px-3.5 py-2 text-xs font-semibold text-white transition-all hover:bg-[#1a1a1a] disabled:opacity-50"
             title="รีเฟรชข้อมูล"
           >
             <RefreshCw
               size={13}
-              className={isLoadingPrs ? "animate-spin" : ""}
+              className={isLoading ? "animate-spin" : ""}
             />
             <span>รีเฟรช</span>
           </button>
         </div>
       </div>
 
-      {prsError && (
+      <div className="flex border border-[#1e1e1e] p-0.5 space-x-1 w-fit bg-[#090909] rounded-lg">
+        <button
+          onClick={() => setPrTypeTab("authored")}
+          className={`px-4 py-2 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
+            prTypeTab === "authored"
+              ? "bg-[#181818] text-white shadow-sm"
+              : "text-[#555] hover:text-[#bbb]"
+          }`}
+        >
+          My Pull Requests ({githubPrs.length})
+        </button>
+        <button
+          onClick={() => setPrTypeTab("review-requested")}
+          className={`px-4 py-2 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
+            prTypeTab === "review-requested"
+              ? "bg-[#181818] text-white shadow-sm"
+              : "text-[#555] hover:text-[#bbb]"
+          }`}
+        >
+          Review & Incoming ({reviewRequestedPrs.length})
+        </button>
+      </div>
+
+      {error && (
         <div className="flex gap-3 rounded border border-red-950/40 bg-red-950/15 p-4 text-sm text-red-400">
           <AlertCircle className="shrink-0 mt-0.5" size={16} />
           <div>
             <h4 className="font-bold text-red-200">เกิดข้อผิดพลาดในการโหลดข้อมูล</h4>
             <p className="mt-1 text-xs text-red-400/90 leading-relaxed">
-              {prsError}
+              {error}
             </p>
             <p className="mt-2 text-xs text-red-300">
               คำแนะนำ: ตรวจสอบ GITHUB_USERNAME และ GITHUB_TOKEN ในไฟล์ .env ของโครงการ
@@ -165,18 +165,8 @@ export function GithubPrs() {
         </div>
       )}
 
-      {!prsError && <PRStatsHeader isLoadingPrs={isLoadingPrs} stats={stats} />}
-
       <div className="space-y-4">
-        {!prsError && (
-          <PRFilters
-            activeFilter={activeSubFilter}
-            onChangeFilter={setActiveSubFilter}
-            filteredCount={filteredPrs.length}
-          />
-        )}
-
-        {isLoadingPrs ? (
+        {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((n) => (
               <div
