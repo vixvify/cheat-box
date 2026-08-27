@@ -13,6 +13,7 @@ import {
   Box,
   Bot,
   GitPullRequest,
+  Server,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
@@ -23,6 +24,7 @@ import type { CategoryId } from "@/core/domain/snippet";
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   "current-projects": Briefcase,
   "github-prs": GitPullRequest,
+  devops: Server,
   "create-project": Terminal,
   "npm-install": Package,
   sweetalert: Layers,

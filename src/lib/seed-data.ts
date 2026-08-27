@@ -5,6 +5,7 @@ import { sweetalertGroups } from '@/core/data/sweetalert'
 import { folderStructureGroups } from '@/core/data/folder-structure'
 import { gitCommandsGroups } from '@/core/data/git-commands'
 import { dockerCommandsGroups } from '@/core/data/docker-commands'
+import { devopsGroups } from '@/core/data/devops-commands'
 
 export function getDefaultCategories(): Category[] {
   return [
@@ -49,6 +50,13 @@ export function getDefaultCategories(): Category[] {
       icon: '🐳',
       description: 'คำสั่ง Docker ที่ใช้บ่อยในการจัดการอิมเมจ คอนเทนเนอร์ และเน็ตเวิร์ก',
       groups: dockerCommandsGroups,
+    },
+    {
+      id: 'devops',
+      label: 'DevOps',
+      icon: '🖥️',
+      description: 'คำสั่งตั้งค่า server, deploy HTML/Next.js/Docker, Nginx, SSL, Portainer และ Rate Limit',
+      groups: devopsGroups,
     },
   ]
 }
