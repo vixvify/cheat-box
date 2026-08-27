@@ -16,12 +16,14 @@ import {
   Box,
   Bot,
   GitPullRequest,
+  Server,
   type LucideIcon,
 } from "lucide-react";
 
 const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   "current-projects": Briefcase,
   "github-prs": GitPullRequest,
+  devops: Server,
   "create-project": Terminal,
   "npm-install": Package,
   sweetalert: Layers,
